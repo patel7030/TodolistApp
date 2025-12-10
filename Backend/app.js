@@ -2,6 +2,8 @@
 import mysql from "mysql2/promise";
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 app.use(cors());
@@ -9,10 +11,12 @@ app.use(express.json());
 
 // MySQL connection
 const db = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Himanshu@2001",
-    database: "Todolist",
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    // uri: process.env.MYSQL_URL
+    port: Number(process.env.MYSQLPORT)
 });
 
 console.log("MySQL connected successfully");
@@ -81,4 +85,5 @@ app.delete("/todos/:id", async(req, res) => {
     res.json({ message: "Todo deleted!" });
 });
 
-app.listen(5000, () => console.log("Server running at http://localhost:5000"));
+app.listen(5000, () => console.log(process.env.MYSQLHOST));
+app.get("/", (req, res) => res.send("MYSQLHOST!"));
